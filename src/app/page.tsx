@@ -49,6 +49,7 @@ const faqItems = [
 
 const HERO_START_IMAGE = '/hero-v2.png';
 const HERO_SIDE_IMAGE = '/cadeiradelado2-v2.png';
+const HERO_IMAGE_OBJECT_POSITION = 'center 38%';
 
 const MotionSection = ({
   children,
@@ -94,13 +95,14 @@ export default function Home() {
   const SCROLL_SENSITIVITY = 0.0003;
   const MOBILE_SCROLL_BOOST = 2.36; // 18% faster than previous 2x boost
   const HERO_SCROLL_SMOOTHING = 0.22;
+  const HERO_UNLOCK_PROGRESS = 0.916; // 21% less hold time on final hero image
 
   const queueHeroProgressDelta = useCallback((delta: number) => {
     if (!isAnimatingProgress.current) {
       targetProgress.current = heroProgress.get();
     }
 
-    targetProgress.current = Math.max(0, Math.min(1, targetProgress.current + delta));
+    targetProgress.current = Math.max(0, Math.min(HERO_UNLOCK_PROGRESS, targetProgress.current + delta));
 
     if (isAnimatingProgress.current) return;
     isAnimatingProgress.current = true;
@@ -131,12 +133,12 @@ export default function Home() {
     if (window.scrollY > 5) return;
 
     // Hero complete + scrolling down → allow natural page scroll
-    if (current >= 1 && e.deltaY > 0) return;
+    if (current >= HERO_UNLOCK_PROGRESS && e.deltaY > 0) return;
 
     // All other cases at top of page: hijack scroll for hero transitions
     e.preventDefault();
     queueHeroProgressDelta(e.deltaY * SCROLL_SENSITIVITY);
-  }, [heroProgress, queueHeroProgressDelta]);
+  }, [heroProgress, queueHeroProgressDelta, HERO_UNLOCK_PROGRESS]);
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
@@ -149,13 +151,13 @@ export default function Home() {
     const delta = touchStartY.current - e.touches[0].clientY;
     touchStartY.current = e.touches[0].clientY;
 
-    if (current >= 1 && delta > 0) return;
+    if (current >= HERO_UNLOCK_PROGRESS && delta > 0) return;
 
-    if (current < 1 || delta < 0) {
+    if (current < HERO_UNLOCK_PROGRESS || delta < 0) {
       e.preventDefault();
       queueHeroProgressDelta(delta * SCROLL_SENSITIVITY * MOBILE_SCROLL_BOOST);
     }
-  }, [heroProgress, queueHeroProgressDelta]);
+  }, [heroProgress, queueHeroProgressDelta, HERO_UNLOCK_PROGRESS]);
 
   useEffect(() => {
     window.addEventListener('wheel', handleWheel, { passive: false });
@@ -175,16 +177,20 @@ export default function Home() {
   const startOpacity = useTransform(heroProgress, [0, 0.40, 0.65], [1, 1, 0]);
   const startScale = useTransform(heroProgress, [0, 0.65], [1, 0.97]);
 
-  // Image 2 (cadeiradelado2.png): crossfades in 35–60%, stays 100% visible from 60% to end
-  const sideOpacity = useTransform(heroProgress, [0.35, 0.60, 1], [0, 1, 1]);
+  // Image 2 (cadeiradelado2.png): crossfades in 35–60%, then holds until unlock
+  const sideOpacity = useTransform(heroProgress, [0.35, 0.60, HERO_UNLOCK_PROGRESS], [0, 1, 1]);
   const sideScale = useTransform(heroProgress, [0.35, 0.75], [1.04, 1]);
 
   // Scroll indicator fades out as user starts scrolling
   const scrollIndicatorOpacity = useTransform(heroProgress, [0, 0.08], [1, 0]);
 
   // Progress bar for visual feedback during locked phase
-  const progressBarScale = useTransform(heroProgress, [0, 1], [0, 1]);
-  const progressBarOpacity = useTransform(heroProgress, [0, 0.02, 0.95, 1], [0, 1, 1, 0]);
+  const progressBarScale = useTransform(heroProgress, [0, HERO_UNLOCK_PROGRESS], [0, 1]);
+  const progressBarOpacity = useTransform(
+    heroProgress,
+    [0, 0.02, HERO_UNLOCK_PROGRESS - 0.05, HERO_UNLOCK_PROGRESS],
+    [0, 1, 1, 0],
+  );
 
   // Scissors: appears during the crossfade zone, slides left→right across the image
   const scissorX = useTransform(heroProgress, [0.14, 0.34, 0.54], ['-110%', '0%', '110%']);
@@ -262,6 +268,7 @@ export default function Home() {
                         priority
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-contain"
+                        style={{ objectPosition: HERO_IMAGE_OBJECT_POSITION }}
                       />
                     </m.div>
                     <m.div
@@ -275,6 +282,7 @@ export default function Home() {
                         loading="eager"
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-contain"
+                        style={{ objectPosition: HERO_IMAGE_OBJECT_POSITION }}
                       />
                     </m.div>
                     {/* Scissors cut effect during crossfade */}
