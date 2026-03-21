@@ -239,7 +239,7 @@ export default function Home() {
               {/* Title block */}
               <div className="order-1">
                 <Tag>Mentor de barbearias • Foz do Iguaçu</Tag>
-                <h1 className="mt-6 font-display text-6xl leading-[0.9] tracking-tight text-bone sm:text-7xl">
+                <h1 className="mt-6 font-display text-[2.95rem] leading-[0.9] tracking-tight text-bone sm:text-[3.55rem]">
                   DE 2 REAIS AO COMANDO DE DUAS BARBEARIAS.
                   <span className="block text-brass">AGORA EU ENSINO VOCÊ A ESCALAR.</span>
                 </h1>
