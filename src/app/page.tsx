@@ -210,7 +210,7 @@ export default function Home() {
 
           <div className="flex min-h-screen items-center">
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 pb-20 pt-32 lg:flex-row lg:items-center">
-              <div className="flex-1">
+              <div className="flex-1 order-2 lg:order-none">
                 <Tag>Mentor de barbearias • Foz do Iguaçu</Tag>
                 <h1 className="mt-6 font-display text-6xl leading-[0.9] tracking-tight text-bone sm:text-7xl">
                   DE 2 REAIS AO COMANDO DE DUAS BARBEARIAS.
@@ -232,7 +232,7 @@ export default function Home() {
 
               </div>
 
-              <div className="relative flex-1">
+              <div className="relative flex-1 order-1 lg:order-none">
                 <m.div className="relative">
                   <div className="hero-image-stage relative h-[520px] w-full pointer-events-none select-none">
                     <div className="hero-glow hero-glow-a" />
