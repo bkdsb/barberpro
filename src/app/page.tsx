@@ -87,9 +87,42 @@ export default function Home() {
   const heroProgress = useMotionValue(0);
   const touchStartY = useRef(0);
   const rafId = useRef(0);
+  const targetProgress = useRef(0);
+  const isAnimatingProgress = useRef(false);
 
   // Scroll-hijacking: lock the page during hero transitions
   const SCROLL_SENSITIVITY = 0.0003;
+  const MOBILE_SCROLL_BOOST = 2.36; // 18% faster than previous 2x boost
+  const HERO_SCROLL_SMOOTHING = 0.22;
+
+  const queueHeroProgressDelta = useCallback((delta: number) => {
+    if (!isAnimatingProgress.current) {
+      targetProgress.current = heroProgress.get();
+    }
+
+    targetProgress.current = Math.max(0, Math.min(1, targetProgress.current + delta));
+
+    if (isAnimatingProgress.current) return;
+    isAnimatingProgress.current = true;
+
+    const animateToTarget = () => {
+      const current = heroProgress.get();
+      const target = targetProgress.current;
+      const distance = target - current;
+
+      if (Math.abs(distance) < 0.0015) {
+        heroProgress.set(target);
+        isAnimatingProgress.current = false;
+        rafId.current = 0;
+        return;
+      }
+
+      heroProgress.set(current + distance * HERO_SCROLL_SMOOTHING);
+      rafId.current = requestAnimationFrame(animateToTarget);
+    };
+
+    rafId.current = requestAnimationFrame(animateToTarget);
+  }, [heroProgress]);
 
   const handleWheel = useCallback((e: WheelEvent) => {
     const current = heroProgress.get();
@@ -102,13 +135,8 @@ export default function Home() {
 
     // All other cases at top of page: hijack scroll for hero transitions
     e.preventDefault();
-    const delta = e.deltaY;
-    cancelAnimationFrame(rafId.current);
-    rafId.current = requestAnimationFrame(() => {
-      const now = heroProgress.get();
-      heroProgress.set(Math.max(0, Math.min(1, now + delta * SCROLL_SENSITIVITY)));
-    });
-  }, [heroProgress]);
+    queueHeroProgressDelta(e.deltaY * SCROLL_SENSITIVITY);
+  }, [heroProgress, queueHeroProgressDelta]);
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
@@ -125,13 +153,9 @@ export default function Home() {
 
     if (current < 1 || delta < 0) {
       e.preventDefault();
-      cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(() => {
-        const now = heroProgress.get();
-        heroProgress.set(Math.max(0, Math.min(1, now + delta * SCROLL_SENSITIVITY * 2)));
-      });
+      queueHeroProgressDelta(delta * SCROLL_SENSITIVITY * MOBILE_SCROLL_BOOST);
     }
-  }, [heroProgress]);
+  }, [heroProgress, queueHeroProgressDelta]);
 
   useEffect(() => {
     window.addEventListener('wheel', handleWheel, { passive: false });
@@ -142,8 +166,10 @@ export default function Home() {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       cancelAnimationFrame(rafId.current);
+      isAnimatingProgress.current = false;
+      targetProgress.current = heroProgress.get();
     };
-  }, [handleWheel, handleTouchStart, handleTouchMove]);
+  }, [handleWheel, handleTouchStart, handleTouchMove, heroProgress]);
 
   // Image 1 (hero.png): fully visible 0–40%, crossfades out 40–65%
   const startOpacity = useTransform(heroProgress, [0, 0.40, 0.65], [1, 1, 0]);
@@ -209,30 +235,18 @@ export default function Home() {
           </nav>
 
           <div className="flex min-h-screen items-center">
-            <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 pb-20 pt-32 lg:flex-row lg:items-center">
-              <div className="flex-1 order-2 lg:order-none">
+            <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-20 pt-32 grid-cols-1 lg:grid-cols-2 lg:items-center">
+              {/* Title block */}
+              <div className="order-1">
                 <Tag>Mentor de barbearias • Foz do Iguaçu</Tag>
                 <h1 className="mt-6 font-display text-6xl leading-[0.9] tracking-tight text-bone sm:text-7xl">
                   DE 2 REAIS AO COMANDO DE DUAS BARBEARIAS.
                   <span className="block text-brass">AGORA EU ENSINO VOCÊ A ESCALAR.</span>
                 </h1>
-                <p className="mt-6 max-w-xl text-lg text-ash">
-                  Barber Gestão Pro é o treinamento direto de Carlos Copetti para donos de barbearia que querem
-                  faturamento previsível e uma operação organizada.
-                </p>
-
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <a
-                    href={ofertaLink}
-                    className="shine rounded-full bg-brass px-7 py-4 text-sm font-semibold uppercase tracking-[0.35em] text-ink shadow-glow transition hover:translate-y-[-2px]"
-                  >
-                    Entrar por R$ 67,00
-                  </a>
-                </div>
-
               </div>
 
-              <div className="relative flex-1 order-1 lg:order-none">
+              {/* Images block */}
+              <div className="relative order-2 lg:row-span-2">
                 <m.div className="relative">
                   <div className="hero-image-stage relative h-[520px] w-full pointer-events-none select-none">
                     <div className="hero-glow hero-glow-a" />
@@ -293,6 +307,22 @@ export default function Home() {
                     </m.div>
                   </div>
                 </m.div>
+              </div>
+
+              {/* Description + CTA block */}
+              <div className="order-3">
+                <p className="max-w-xl text-lg text-ash">
+                  Barber Gestão Pro é o treinamento direto de Carlos Copetti para donos de barbearia que querem
+                  faturamento previsível e uma operação organizada.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <a
+                    href={ofertaLink}
+                    className="shine rounded-full bg-brass px-7 py-4 text-sm font-semibold uppercase tracking-[0.35em] text-ink shadow-glow transition hover:translate-y-[-2px]"
+                  >
+                    Entrar por R$ 67,00
+                  </a>
+                </div>
               </div>
             </div>
 
