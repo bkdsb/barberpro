@@ -3,10 +3,11 @@ import { JourneyModules } from '@/components/journey-modules';
 
 const checkoutLink =
   'https://pay.kiwify.com.br/2EF44sD?utm_source=ig&utm_medium=social&utm_content=link_in_bio';
-const whatsappNumber = '5531983200145';
-const whatsappDisplay = '+55 (31) 98320-0145';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://barbergestaopro.com.br';
+const whatsappNumber = '5542998069368';
+const whatsappDisplay = '+55 (42) 99806-9368';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-  'Olá, quero saber mais sobre o curso Barber Gestão Pro.',
+  'Opa, quero saber mais sobre o curso Barber Gestão Pro!',
 )}`;
 
 const challengeCards = [
@@ -156,9 +157,53 @@ const faqItems = [
 
 const marqueeText = new Array(26).fill('Barber Gestão Pro');
 
+const courseJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: 'Barber Gestão Pro',
+  description:
+    'Curso prático com Carlos Copetti para estruturar operação, liderança, marketing e financeiro da barbearia.',
+  provider: {
+    '@type': 'Organization',
+    name: "Copetti's Barbershop",
+    url: siteUrl,
+    sameAs: ['https://www.instagram.com/copettisbarbershop/'],
+  },
+  instructor: {
+    '@type': 'Person',
+    name: 'Carlos Copetti',
+  },
+  inLanguage: 'pt-BR',
+  offers: {
+    '@type': 'Offer',
+    url: checkoutLink,
+    price: '67.00',
+    priceCurrency: 'BRL',
+    availability: 'https://schema.org/InStock',
+    category: 'Course',
+  },
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+
 export default function Home() {
   return (
     <main className="lp">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([courseJsonLd, faqJsonLd]) }}
+      />
       <div className="bg-grid" aria-hidden="true" />
 
       <section className="hero section" id="inicio">
