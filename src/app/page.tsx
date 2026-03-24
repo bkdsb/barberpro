@@ -468,7 +468,7 @@ export default function Home() {
         <div className="wrap audience-grid">
           <div className="aud-photo">
             <Image
-              src="/fotomentornova.jpeg"
+              src="/cadeiradelado2-v2.png"
               alt="Carlos Copetti em mentoria"
               width={1080}
               height={1350}
