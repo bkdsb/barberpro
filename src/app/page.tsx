@@ -143,7 +143,7 @@ const faqItems = [
   },
   {
     q: '2 - Valor e pagamento',
-    a: 'Acesso por R$67,00 em pagamento único, com aulas, bônus, suporte e comunidade.',
+    a: 'Acesso por R$67,00 em pagamento único, com aulas, bônus e suporte.',
   },
   {
     q: '3 - Garantia',
@@ -572,7 +572,13 @@ export default function Home() {
       </section>
 
       <footer className="footer">
-        <p>Copyright 2026 – Barber Gestão Pro ® Todos os direitos reservados.</p>
+        <p className="footer-main">Copyright 2026 – Barber Gestão Pro ® Todos os direitos reservados.</p>
+        <p className="footer-credit">
+          Site feito por{' '}
+          <a href="https://belegante.co" target="_blank" rel="noreferrer" className="footer-shine">
+            belegante.co
+          </a>
+        </p>
       </footer>
 
       <a
