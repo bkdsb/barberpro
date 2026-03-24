@@ -1377,22 +1377,29 @@ a {
 }
 
 .footer-shine {
+  display: inline-block;
+  position: relative;
   text-decoration: none;
   font-weight: 700;
-  background-image: linear-gradient(
-    105deg,
-    rgba(130, 239, 172, 0.38) 0%,
-    rgba(255, 255, 255, 0.82) 26%,
-    rgba(130, 239, 172, 1) 44%,
-    rgba(255, 255, 255, 0.82) 62%,
-    rgba(130, 239, 172, 0.38) 100%
+  background-image: repeating-linear-gradient(
+    108deg,
+    rgba(130, 239, 172, 0.9) 0px,
+    rgba(130, 239, 172, 0.9) 28px,
+    rgba(255, 255, 255, 0.96) 28px,
+    rgba(255, 255, 255, 0.96) 40px,
+    rgba(130, 239, 172, 0.9) 40px,
+    rgba(130, 239, 172, 0.9) 180px
   );
-  background-size: 240% 100%;
-  background-position: 0% 0%;
+  background-size: 180px 100%;
+  background-position: 0 0;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: footer-credit-shine 6.4s linear infinite;
+  text-shadow: 0 0 14px rgba(130, 239, 172, 0.14);
+  will-change: background-position;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  animation: footer-credit-shine 3.8s linear infinite;
 }
 
 .floating-wa {
@@ -1501,10 +1508,10 @@ a {
 
 @keyframes footer-credit-shine {
   0% {
-    background-position: 0% 0%;
+    background-position: 0 0;
   }
   100% {
-    background-position: 240% 0%;
+    background-position: -180px 0;
   }
 }
 
