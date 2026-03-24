@@ -1,705 +1,559 @@
-'use client';
-
 import Image from 'next/image';
-import { useRef, useEffect, useCallback, type ReactNode } from 'react';
-import { LazyMotion, domAnimation, m, useReducedMotion, useMotionValue, useTransform } from 'framer-motion';
+import { JourneyModules } from '@/components/journey-modules';
 
-const ofertaLink =
+const checkoutLink =
   'https://pay.kiwify.com.br/2EF44sD?utm_source=ig&utm_medium=social&utm_content=link_in_bio';
+const whatsappNumber = '5531983200145';
+const whatsappDisplay = '+55 (31) 98320-0145';
+const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+  'Olá, quero saber mais sobre o curso Barber Gestão Pro.',
+)}`;
 
-const toolIcons = [
-  { src: '/tesoura.svg', label: 'Precisão' },
-  { src: '/mustache.svg', label: 'Estilo' },
-  { src: '/navalha.svg', label: 'Detalhe' },
+const challengeCards = [
+  {
+    title: 'Falta de visão como dono',
+    text: 'Aprenda a enxergar o seu negócio e transformar decisões em ações maduras e estratégicas.',
+  },
+  {
+    title: 'Falta de ideias para Marketing',
+    text: 'Conquiste clientes e fidelize sua marca com posicionamento além de ofertas promocionais.',
+  },
+  {
+    title: 'Liderança que não transforma',
+    text: 'Influencie equipe, cobre resultados, delegue da forma certa e mantenha engajamento alto.',
+  },
+  {
+    title: 'Falta de gestão financeira',
+    text: 'Precifique com critério, controle dados e entenda o potencial das finanças do seu negócio.',
+  },
+  {
+    title: 'Necessidade de processos claros',
+    text: 'Padronize rotinas para ensinar sua equipe a trabalhar com ordem e excelência.',
+  },
 ];
 
-const metodoCards = [
+const baseTrainings = [
   {
-    title: 'Preço que sustenta lucro',
-    text: 'Pare de competir por centavos e construa margem real com posicionamento certo.',
+    title: 'Financeiro',
+    text: 'Métodos para estruturar as finanças, fortalecer a saúde do negócio e maximizar resultados.',
+    image: '/negocio.png',
+    imagePosition: '50% 23%',
   },
   {
-    title: 'Agenda cheia com previsão',
-    text: 'Processos de agendamento e experiência que lotam a cadeira.',
+    title: 'Pessoas',
+    text: 'Desenvolvimento de equipe com cultura, comunicação eficiente, liderança e treinamento.',
+    image: '/fotocomtime.jpg',
+    imagePosition: '50% 44%',
   },
   {
-    title: 'Equipe com padrão',
-    text: 'Treine, acompanhe e padronize atendimento para escalar com consistência.',
+    title: 'Processos',
+    text: 'Organize tarefas, padronize execução e mantenha a operação eficiente todos os dias.',
+    image: '/ensinando.jpeg',
+    imagePosition: '50% 23%',
   },
   {
-    title: 'Marketing de bairro + digital',
-    text: 'Conteúdo e prova social que geram fluxo local e autoridade.',
+    title: 'Marketing',
+    text: 'Estratégias para atrair, persuadir e encantar clientes com agenda cheia e marca forte.',
+    image: '/mentorfotocomspray.jpeg',
+    imagePosition: '50% 23%',
   },
+];
+
+const extraTrainings = [
+  { title: 'Mentor experiente', image: '/alunos3.jpeg', imagePosition: '50% 50%' },
+  { title: 'Método validado', image: '/alunos2.jpeg', imagePosition: '50% 30%' },
+  { title: 'Alunos comprovam', image: '/alunos.jpeg', imagePosition: '50% 21%' },
+];
+
+const courseModules = [
+  {
+    title: 'Introdução',
+    text: 'Fundamentos para começar com visão de dono, posicionamento e direção estratégica.',
+    image: '/modulo1.jpeg',
+  },
+  {
+    title: 'Abrindo uma barbearia',
+    text: 'Passo a passo para estruturar o início sem improviso e com base financeira segura.',
+    image: '/modulo2.jpeg',
+  },
+  {
+    title: 'Gerenciando a barbearia',
+    text: 'Rotina de gestão, equipe, processos e indicadores para manter resultado previsível.',
+    image: '/modulo3.jpeg',
+  },
+  {
+    title: 'Expandindo a barbearia',
+    text: 'Método para escalar com segurança e preparar a operação para uma segunda unidade.',
+    image: '/modulo4.jpeg',
+  },
+];
+
+const advantages = [
+  {
+    title: 'Aulas atualizadas',
+    text: 'Novos conhecimentos e atualizações para o seu sucesso.',
+  },
+  {
+    title: 'App exclusivo',
+    text: 'Estude de onde estiver com acesso rápido.',
+  },
+  {
+    title: 'Suporte personalizado',
+    text: 'Dúvidas de aulas e estratégia no WhatsApp.',
+  },
+  {
+    title: 'Playlists de estudo',
+    text: 'Trilhas por tema para acelerar execução.',
+  },
+];
+
+const rootsGallery = [
+  {
+    title: 'O começo',
+    subtitle: 'Ninguém acredita em você até que...',
+    image: '/ninguemacreditameninochorando.jpeg',
+    imagePosition: '50% 50%',
+  },
+  {
+    title: 'Na televisão',
+    subtitle: 'Visibilidade local e autoridade',
+    image: '/antigamasnatelevisao.jpeg',
+    imagePosition: '50% 50%',
+  },
+  {
+    title: 'Na rádio local',
+    subtitle: 'Comunicação e posicionamento',
+    image: '/mentorradio.jpeg',
+    imagePosition: '50% 32%',
+  },
+];
+
+const audience = [
+  'Donos de barbearia que querem evoluir visão, faturamento e estratégia de gestão.',
+  'Empreendedores iniciantes que desejam sair da operação e estruturar crescimento.',
+  'Barbeiros que desejam abrir a própria unidade com base sólida.',
+  'Donos que já têm equipe, mas enfrentam dificuldade em liderança e padrão.',
 ];
 
 const faqItems = [
   {
-    q: 'Para quem é o Barber Gestão Pro?',
-    a: 'Para barbeiros e donos que querem organizar a operação e crescer com consistência.',
+    q: '1 - Formas de pagamento',
+    a: 'Cartão de crédito, boleto ou pix.',
   },
   {
-    q: 'O conteúdo é prático?',
-    a: "Sim. A base é a rotina real aplicada nas unidades da Copetti's Barbershop.",
+    q: '2 - Valor e pagamento',
+    a: 'Acesso por R$67,00 em pagamento único, com aulas, bônus, suporte e comunidade.',
   },
   {
-    q: 'Preciso ter duas unidades?',
-    a: 'Não. O método serve para quem está montando ou já tem uma barbearia em funcionamento.',
+    q: '3 - Garantia',
+    a: 'Garantia incondicional de 7 dias. Se não fizer sentido para você, devolvemos 100%.',
+  },
+  {
+    q: '4 - Fidelidade',
+    a: 'Sem fidelidade forçada. Você pode cancelar a qualquer momento.',
   },
 ];
 
-const HERO_START_IMAGE = '/hero-v2.png';
-const HERO_SIDE_IMAGE = '/cadeiradelado2-v2.png';
-const HERO_IMAGE_OBJECT_POSITION = 'center 38%';
-
-const MotionSection = ({
-  children,
-  className,
-  delay = 0,
-  id,
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-  id?: string;
-}) => {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <m.section
-      id={id}
-      className={className}
-      initial={reduceMotion ? false : { opacity: 0, y: 32 }}
-      whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
-    >
-      {children}
-    </m.section>
-  );
-};
-
-const Tag = ({ children }: { children: ReactNode }) => (
-  <span className="uppercase tracking-[0.35em] text-[11px] text-ash/80 font-semibold">{children}</span>
-);
+const marqueeText = new Array(26).fill('Barber Gestão Pro');
 
 export default function Home() {
-  const reduceMotion = useReducedMotion();
-  const heroRef = useRef<HTMLElement | null>(null);
-  const heroProgress = useMotionValue(0);
-  const touchStartY = useRef(0);
-  const rafId = useRef(0);
-  const targetProgress = useRef(0);
-  const isAnimatingProgress = useRef(false);
-
-  // Scroll-hijacking: lock the page during hero transitions
-  const SCROLL_SENSITIVITY = 0.0003;
-  const MOBILE_SCROLL_BOOST = 2.36; // 18% faster than previous 2x boost
-  const HERO_SCROLL_SMOOTHING = 0.22;
-  const HERO_UNLOCK_PROGRESS = 0.916; // 21% less hold time on final hero image
-
-  const queueHeroProgressDelta = useCallback((delta: number) => {
-    if (!isAnimatingProgress.current) {
-      targetProgress.current = heroProgress.get();
-    }
-
-    targetProgress.current = Math.max(0, Math.min(HERO_UNLOCK_PROGRESS, targetProgress.current + delta));
-
-    if (isAnimatingProgress.current) return;
-    isAnimatingProgress.current = true;
-
-    const animateToTarget = () => {
-      const current = heroProgress.get();
-      const target = targetProgress.current;
-      const distance = target - current;
-
-      if (Math.abs(distance) < 0.0015) {
-        heroProgress.set(target);
-        isAnimatingProgress.current = false;
-        rafId.current = 0;
-        return;
-      }
-
-      heroProgress.set(current + distance * HERO_SCROLL_SMOOTHING);
-      rafId.current = requestAnimationFrame(animateToTarget);
-    };
-
-    rafId.current = requestAnimationFrame(animateToTarget);
-  }, [heroProgress]);
-
-  const handleWheel = useCallback((e: WheelEvent) => {
-    const current = heroProgress.get();
-
-    // If user has scrolled past the hero, don't hijack
-    if (window.scrollY > 5) return;
-
-    // Hero complete + scrolling down → allow natural page scroll
-    if (current >= HERO_UNLOCK_PROGRESS && e.deltaY > 0) return;
-
-    // All other cases at top of page: hijack scroll for hero transitions
-    e.preventDefault();
-    queueHeroProgressDelta(e.deltaY * SCROLL_SENSITIVITY);
-  }, [heroProgress, queueHeroProgressDelta, HERO_UNLOCK_PROGRESS]);
-
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-  }, []);
-
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    const current = heroProgress.get();
-    if (window.scrollY > 5) return;
-
-    const delta = touchStartY.current - e.touches[0].clientY;
-    touchStartY.current = e.touches[0].clientY;
-
-    if (current >= HERO_UNLOCK_PROGRESS && delta > 0) return;
-
-    if (current < HERO_UNLOCK_PROGRESS || delta < 0) {
-      e.preventDefault();
-      queueHeroProgressDelta(delta * SCROLL_SENSITIVITY * MOBILE_SCROLL_BOOST);
-    }
-  }, [heroProgress, queueHeroProgressDelta, HERO_UNLOCK_PROGRESS]);
-
-  useEffect(() => {
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      cancelAnimationFrame(rafId.current);
-      isAnimatingProgress.current = false;
-      targetProgress.current = heroProgress.get();
-    };
-  }, [handleWheel, handleTouchStart, handleTouchMove, heroProgress]);
-
-  // Image 1 (hero.png): fully visible 0–40%, crossfades out 40–65%
-  const startOpacity = useTransform(heroProgress, [0, 0.40, 0.65], [1, 1, 0]);
-  const startScale = useTransform(heroProgress, [0, 0.65], [1, 0.97]);
-
-  // Image 2 (cadeiradelado2.png): crossfades in 35–60%, then holds until unlock
-  const sideOpacity = useTransform(heroProgress, [0.35, 0.60, HERO_UNLOCK_PROGRESS], [0, 1, 1]);
-  const sideScale = useTransform(heroProgress, [0.35, 0.75], [1.04, 1]);
-
-  // Scroll indicator fades out as user starts scrolling
-  const scrollIndicatorOpacity = useTransform(heroProgress, [0, 0.08], [1, 0]);
-
-  // Progress bar for visual feedback during locked phase
-  const progressBarScale = useTransform(heroProgress, [0, HERO_UNLOCK_PROGRESS], [0, 1]);
-  const progressBarOpacity = useTransform(
-    heroProgress,
-    [0, 0.02, HERO_UNLOCK_PROGRESS - 0.05, HERO_UNLOCK_PROGRESS],
-    [0, 1, 1, 0],
-  );
-
-  // Scissors: appears during the crossfade zone, slides left→right across the image
-  const scissorX = useTransform(heroProgress, [0.14, 0.34, 0.54], ['-110%', '0%', '110%']);
-  const scissorOpacity = useTransform(heroProgress, [0.14, 0.19, 0.34, 0.49, 0.54], [0, 1, 1, 1, 0]);
-  const scissorRotate = useTransform(heroProgress, [0.14, 0.34, 0.54], [-12, 0, 12]);
-  const cutLineScale = useTransform(heroProgress, [0.16, 0.49], [0, 1]);
-  const cutLineOpacity = useTransform(heroProgress, [0.14, 0.19, 0.49, 0.54], [0, 0.6, 0.6, 0]);
-
   return (
-    <LazyMotion features={domAnimation}>
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-hero-radial" />
-        <div className="absolute inset-0 -z-10 bg-hero-radial-2" />
-        <div className="haze-layer -z-10">
-          <div className="haze-beam haze-beam-a" />
-          <div className="haze-beam haze-beam-b" />
-          <div className="haze-beam haze-beam-c" />
-        </div>
-        <div className="metal-grid pointer-events-none absolute inset-0 -z-10 opacity-40" />
+    <main className="lp">
+      <div className="bg-grid" aria-hidden="true" />
 
-        <header ref={heroRef} className="relative min-h-screen">
-          <nav className="fixed left-0 right-0 top-0 z-40">
-            <div className="nav-glass mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full border border-white/20 bg-black/50 p-2">
-                  <Image src="/navalha.svg" alt="Navalha" width={24} height={24} className="h-full w-full icon-gold" />
-                </div>
-                <div>
-                  <p className="font-display text-xl tracking-widest">BARBER GESTÃO PRO</p>
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-ash">Projeto 50K</p>
-                </div>
-              </div>
-              <div className="hidden items-center gap-6 text-xs uppercase tracking-[0.3em] text-ash md:flex">
-                <a href="#sobre" className="hover:text-bone">
-                  sobre
-                </a>
-                <a href="#metodo" className="hover:text-bone">
-                  método
-                </a>
-                <a href="#provas" className="hover:text-bone">
-                  provas
-                </a>
-                <a href="#oferta" className="hover:text-bone">
-                  oferta
-                </a>
-              </div>
-            </div>
-          </nav>
+      <section className="hero section" id="inicio">
+        <div className="wrap hero-grid">
+          <div className="hero-copy">
+            <h1 className="hero-title">
+              <span className="hero-line">A construção de um negocio</span>
+              <span className="hero-line">lucrativo e autêntico começa</span>
+              <span className="hero-line">
+                aqui na <span className="hero-highlight">Barber Gestão Pro</span>
+              </span>
+            </h1>
+            <p>
+              Aprenda a desenvolver equipe engajada, clientes fiéis à sua marca e um negócio que funciona sem depender
+              de você na operação.
+            </p>
+            <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
+              Transforme seu negócio hoje
+            </a>
+          </div>
 
-          <div className="flex min-h-screen items-center">
-            <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-20 pt-32 grid-cols-1 lg:grid-cols-2 lg:items-center">
-              {/* Title block */}
-              <div className="order-1">
-                <Tag>Mentor de barbearias • Foz do Iguaçu</Tag>
-                <h1 className="mt-6 font-display text-[2.95rem] leading-[0.9] tracking-tight text-bone sm:text-[3.55rem]">
-                  DE 2 REAIS AO COMANDO DE DUAS BARBEARIAS.
-                  <span className="block text-brass">AGORA EU ENSINO VOCÊ A ESCALAR.</span>
-                </h1>
-              </div>
-
-              {/* Images block */}
-              <div className="relative order-2 lg:row-span-2">
-                <m.div className="relative">
-                  <div className="hero-image-stage relative h-[520px] w-full pointer-events-none select-none">
-                    <div className="hero-glow hero-glow-a" />
-                    <div className="hero-glow hero-glow-b" />
-                    <m.div
-                      className="absolute inset-0 z-10"
-                      style={{ opacity: startOpacity, scale: startScale, willChange: 'transform, opacity' }}
-                    >
-                      <Image
-                        src={HERO_START_IMAGE}
-                        alt="Carlos Copetti na cadeira"
-                        fill
-                        priority
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-contain"
-                        style={{ objectPosition: HERO_IMAGE_OBJECT_POSITION }}
-                      />
-                    </m.div>
-                    <m.div
-                      className="absolute inset-0 z-20"
-                      style={{ opacity: sideOpacity, scale: sideScale, willChange: 'transform, opacity' }}
-                    >
-                      <Image
-                        src={HERO_SIDE_IMAGE}
-                        alt="Carlos Copetti na cadeira de lado"
-                        fill
-                        loading="eager"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-contain"
-                        style={{ objectPosition: HERO_IMAGE_OBJECT_POSITION }}
-                      />
-                    </m.div>
-                    {/* Scissors cut effect during crossfade */}
-                    <m.div
-                      className="absolute inset-0 z-[25] flex items-center justify-center pointer-events-none"
-                      style={{ opacity: scissorOpacity }}
-                    >
-                      <m.div
-                        className="absolute left-[6%] right-[6%] top-1/2 h-px"
-                        style={{
-                          scaleX: cutLineScale,
-                          opacity: cutLineOpacity,
-                          background: 'linear-gradient(90deg, transparent, rgba(209, 169, 90, 0.5), transparent)',
-                          transformOrigin: '0% 50%',
-                        }}
-                      />
-                      <m.img
-                        src="/tesoura.svg"
-                        alt=""
-                        aria-hidden="true"
-                        style={{
-                          x: scissorX,
-                          rotate: scissorRotate,
-                          scaleX: -1,
-                          width: 'clamp(140px, 22vw, 280px)',
-                          height: 'auto',
-                          filter: 'brightness(0) saturate(100%) invert(83%) sepia(22%) saturate(540%) hue-rotate(7deg) brightness(95%) contrast(90%)',
-                        }}
-                      />
-                    </m.div>
-                  </div>
-                </m.div>
-              </div>
-
-              {/* Description + CTA block */}
-              <div className="order-3">
-                <p className="max-w-xl text-lg text-ash">
-                  Barber Gestão Pro é o treinamento direto de Carlos Copetti para donos de barbearia que querem
-                  faturamento previsível e uma operação organizada.
-                </p>
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <a
-                    href={ofertaLink}
-                    className="shine rounded-full bg-brass px-7 py-4 text-sm font-semibold uppercase tracking-[0.35em] text-ink shadow-glow transition hover:translate-y-[-2px]"
-                  >
-                    Entrar por R$ 67,00
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Scroll indicator */}
-            <m.div
-              className="hero-scroll-indicator"
-              style={{ opacity: scrollIndicatorOpacity }}
-            >
-              <span className="hero-scroll-indicator-text">Role para baixo</span>
-              <svg className="hero-scroll-indicator-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M10 4v12M4 12l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </m.div>
-
-            {/* Progress bar – shows transition progress while locked */}
-            <m.div
-              className="hero-progress-bar"
-              style={{ scaleX: progressBarScale, opacity: progressBarOpacity }}
+          <div className="hero-photo-wrap">
+            <div className="hero-dots" aria-hidden="true" />
+            <div className="hero-halo" aria-hidden="true" />
+            <Image
+              src="/hero-v2.png"
+              alt="Carlos Copetti em pose lateral"
+              width={1272}
+              height={1424}
+              preload
+              sizes="(max-width: 1024px) 88vw, 42vw"
+              className="hero-photo"
             />
           </div>
-        </header>
+        </div>
+      </section>
 
-        <MotionSection className="mx-auto max-w-6xl px-6 pb-16 section-lazy">
-          <div className="grid gap-6 md:grid-cols-3">
-            {toolIcons.map((tool, index) => (
-              <m.div
-                key={tool.label}
-                initial={reduceMotion ? false : { opacity: 0, y: 26 }}
-                whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: index * 0.08 }}
-                className={`golden-border rounded-3xl ${index === 1 ? 'md:translate-y-6' : ''} ${index === 2 ? 'md:-translate-y-4' : ''
-                  }`}
-              >
-                <div className="icon-card flex items-center justify-between rounded-3xl px-6 py-5">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.35em] text-ash">Ferramenta</p>
-                    <p className="mt-2 text-xl text-bone">{tool.label}</p>
-                  </div>
-                  <img
-                    src={tool.src}
-                    alt={tool.label}
-                    className={`icon-gold h-14 w-14 icon-float${index > 0 ? ` icon-float-delay-${index}` : ''}`}
-                  />
-                </div>
-              </m.div>
-            ))}
-          </div>
-        </MotionSection>
-
-        <div className="ticker border-y border-white/10 bg-black/40 py-3 text-sm uppercase tracking-[0.35em] text-ash">
-          <span>
-            fluxo • precificação • agenda • pós-venda • equipe • experiência • faturamento • posicionamento •
-            fluxo • precificação • agenda • pós-venda • equipe • experiência • faturamento • posicionamento
-          </span>
+      <section className="section problems" id="solucoes">
+        <div className="wrap section-head center problems-head">
+          <p className="tag">Soluções Personalizadas</p>
+          <h2 className="problems-title">
+            Na Barber Gestão Pro você aprende <span className="problems-accent">estratégias poderosas</span> para
+            resolver os principais desafios de um negócio.
+          </h2>
         </div>
 
-        <MotionSection id="sobre" className="mx-auto max-w-6xl px-6 py-20 section-lazy">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <div>
-              <Tag>Quem lidera</Tag>
-              <h2 className="mt-5 font-display text-5xl leading-[0.95] text-bone">
-                Carlos Copetti e a Copetti&apos;s Barbershop
-              </h2>
-              <p className="mt-5 text-lg text-ash">
-                Fundador, barbeiro e proprietário da Copetti&apos;s Barbershop, com duas unidades em Foz do Iguaçu. A
-                marca ficou conhecida pela experiência masculina completa - técnica, ambiente e atendimento. Esse
-                repertório sustenta o Barber Gestão Pro.
-              </p>
-              <div className="mt-8 space-y-4 border-l border-white/10 pl-4">
-                <div>
-                  <p className="text-sm uppercase tracking-[0.3em] text-ash">Unidade 01</p>
-                  <p className="mt-2 text-lg text-bone">Vila Yolanda</p>
-                  <p className="text-sm text-ash">Av. Felipe Wandscheer, 805</p>
-                </div>
-                <div>
-                  <p className="text-sm uppercase tracking-[0.3em] text-ash">Unidade 02</p>
-                  <p className="mt-2 text-lg text-bone">Jardim Naipi</p>
-                  <p className="text-sm text-ash">Foz do Iguaçu • PR</p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="glass rounded-3xl p-6">
-                <Tag>Posicionamento</Tag>
-                <p className="mt-4 font-serif text-2xl text-bone">“Mais que uma barbearia, um lugar de transformação.”</p>
-                <p className="mt-5 text-ash">
-                  O curso traduz essa experiência em processos replicáveis, sem perder o estilo masculino que gera
-                  fidelidade.
-                </p>
-                <div className="mt-6 text-xs uppercase tracking-[0.3em] text-ash">@copettisbarbershop</div>
-              </div>
-              <div className="absolute -bottom-8 -left-6 hidden rounded-full border border-brass/40 px-6 py-3 text-xs uppercase tracking-[0.3em] text-ash lg:block">
-                Mentor desde 2019
-              </div>
-            </div>
-          </div>
-        </MotionSection>
+        <div className="wrap problems-grid">
+          {challengeCards.map((card) => (
+            <article key={card.title} className="problem-card">
+              <span className="problem-mark">X</span>
+              <h3>{card.title}:</h3>
+              <p>{card.text}</p>
+            </article>
+          ))}
+        </div>
 
-        <MotionSection id="historia" className="mx-auto max-w-6xl px-6 py-20 section-lazy">
-          <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
-            <div className="flex h-full flex-col">
-              <Tag>Raízes</Tag>
-              <h2 className="mt-5 font-display text-5xl leading-[0.95] text-bone">
-                História real, sem romantizar.
-              </h2>
-              <p className="mt-4 text-lg text-ash">
-                Uma trajetória de verdade, registrada em momentos-chave.
-                <br />
-                O foco é mostrar de onde veio a visão que hoje guia o Barber Gestão Pro.
-              </p>
-              <ul className="mt-8 flex flex-1 flex-col gap-5 text-sm uppercase tracking-[0.35em] text-ash lg:justify-between lg:pb-2">
-                <li className="flex items-start gap-3 leading-[1.45]">
-                  <span className="mt-[0.52em] h-2 w-2 rounded-full bg-brass" />
-                  Da infância simples às primeiras oportunidades.
-                </li>
-                <li className="flex items-start gap-3 leading-[1.45]">
-                  <span className="mt-[0.52em] h-2 w-2 rounded-full bg-brass" />
-                  Visibilidade local, experiência prática e construção de autoridade.
-                </li>
-                <li className="flex items-start gap-3 leading-[1.45]">
-                  <span className="mt-[0.52em] h-2 w-2 rounded-full bg-brass" />
-                  2 unidades em Foz do Iguaçu
-                </li>
-                <li className="flex items-start gap-3 leading-[1.45]">
-                  <span className="mt-[0.52em] h-2 w-2 rounded-full bg-brass" />
-                  Gestão real, barbearia ativa
-                </li>
-                <li className="flex items-start gap-3 leading-[1.45]">
-                  <span className="mt-[0.52em] h-2 w-2 rounded-full bg-brass" />
-                  Mentoria de dono para dono
-                </li>
-              </ul>
-            </div>
-            <div className="grid gap-4">
-              <div className="relative overflow-hidden rounded-3xl border border-white/10">
-                <div className="grid grid-cols-2 gap-0">
-                  <div className="relative -mr-px">
-                    <Image
-                      src="/meninopequenoninguemacredita.jpeg"
-                      alt="Infância: ninguém acredita em você"
-                      width={520}
-                      height={520}
-                      className="block h-48 w-full object-cover object-[62%_12%]"
-                    />
-                  </div>
-                  <div className="relative -ml-px">
-                    <Image
-                      src="/ninguemacreditameninochorando.jpeg"
-                      alt="Infância"
-                      width={520}
-                      height={520}
-                      className="block h-48 w-full object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[76%] max-w-[420px] rounded-full border border-brass/40 bg-black/75 px-4 py-1 text-center text-[10px] uppercase tracking-[0.3em] text-ash backdrop-blur-sm">
-                  Ninguém acredita em você até que...
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="relative overflow-hidden rounded-3xl border border-white/10">
-                  <Image
-                    src="/antigamasnatelevisao.jpeg"
-                    alt="Aparição na televisão"
-                    width={520}
-                    height={420}
-                    className="h-44 w-full object-cover"
-                  />
-                  <div className="absolute bottom-3 left-3 rounded-full border border-brass/40 bg-black/60 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-ash">
-                    Na televisão
-                  </div>
-                </div>
-                <div className="relative overflow-hidden rounded-3xl border border-white/10">
-                  <Image
-                    src="/mentor%20na%20radio.jpeg"
-                    alt="Mentor na rádio"
-                    width={520}
-                    height={420}
-                    className="h-44 w-full object-cover object-[55%_50%] md:object-[55%_35%]"
-                  />
-                  <div className="absolute bottom-3 left-3 rounded-full border border-brass/40 bg-black/60 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-ash">
-                    Na rádio local
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="relative overflow-hidden rounded-3xl border border-white/10">
-                  <Image
-                    src="/mentorfotonaneve.jpeg"
-                    alt="Curtindo férias"
-                    width={520}
-                    height={420}
-                    className="h-44 w-full object-cover"
-                  />
-                  <div className="absolute bottom-3 left-3 rounded-full border border-brass/40 bg-black/60 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-ash">
-                    Curtindo férias
-                  </div>
-                </div>
-                <div className="relative overflow-hidden rounded-3xl border border-white/10">
-                  <Image
-                    src="/fotocomtime.jpg"
-                    alt="Foto com o time"
-                    width={520}
-                    height={420}
-                    className="h-44 w-full object-cover object-[50%_68%] md:object-center"
-                  />
-                  <div className="absolute bottom-3 left-3 rounded-full border border-brass/40 bg-black/60 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-ash">
-                    Com o time
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </MotionSection>
+        <div className="wrap center-cta">
+          <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
+            Transforme seu negócio hoje
+          </a>
+        </div>
+      </section>
 
-        <MotionSection id="metodo" className="methodo-surface mx-auto max-w-6xl px-6 py-20 section-lazy">
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div className="relative overflow-hidden lg:-translate-x-6">
+      <section className="marquee" aria-label="Barber Gestão Pro">
+        <div className="marquee-track">
+          {marqueeText.map((item, index) => (
+            <span key={`m1-${index}`}>
+              {item} <b>•</b>
+            </span>
+          ))}
+          {marqueeText.map((item, index) => (
+            <span key={`m2-${index}`}>
+              {item} <b>•</b>
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="section trainings" id="treinamentos">
+        <div className="wrap trainings-top">
+          <div className="trainings-word" data-text="BARBER PRO" aria-hidden="true">
+            BARBER PRO
+          </div>
+          <Image
+            src="/carlos1-v2.png"
+            alt="Carlos Copetti"
+            width={721}
+            height={1065}
+            sizes="(max-width: 720px) 60vw, 384px"
+            className="laptop"
+          />
+          <h2>Os treinamentos base da Barber Gestão Pro garantem ferramentas para impulsionar sua operação.</h2>
+        </div>
+
+        <div className="wrap base-grid">
+          {baseTrainings.map((item) => (
+            <article className="base-card" key={item.title}>
               <Image
-                src="/negocio.png"
-                alt="Gestão que transforma corte em negócio"
-                width={1000}
-                height={760}
-                className="h-[540px] w-full origin-top object-contain object-top scale-[1.12] sm:h-[600px] lg:h-[620px] lg:scale-[1.16]"
+                src={item.image}
+                alt={item.title}
+                width={640}
+                height={420}
+                sizes="(max-width: 720px) 100vw, (max-width: 1080px) 50vw, 25vw"
+                quality={82}
+                className="base-image"
+                style={{ objectPosition: item.imagePosition }}
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink via-ink/72 to-transparent" />
-            </div>
-            <div className="lg:pl-6">
-              <Tag>O que você vai dominar</Tag>
-              <h2 className="mt-5 font-display text-5xl leading-[0.95] text-bone">
-                Gestão que transforma corte em negócio.
-              </h2>
-              <p className="mt-4 max-w-xl text-ash">
-                Um plano direto para controlar agenda, caixa e experiência do cliente, sem fórmulas genéricas.
-              </p>
-              <div className="mt-8 space-y-6 border-l border-white/10 pl-6">
-                {metodoCards.map((item, index) => (
-                  <div
-                    key={item.title}
-                    className={`metodo-card-hover${reduceMotion ? '' : ''}`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <span className="text-xs font-semibold uppercase tracking-[0.35em] text-brass">
-                        0{index + 1}
-                      </span>
-                      <div>
-                        <p className="text-lg text-bone">{item.title}</p>
-                        <p className="mt-1 text-ash">{item.text}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </MotionSection>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <MotionSection id="provas" className="mx-auto max-w-6xl px-6 py-20 section-lazy">
-          <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <Tag>Prova visual</Tag>
-                <h2 className="mt-5 font-display text-5xl text-bone">Treinamento com gente real: alunos.</h2>
-                <p className="mt-4 max-w-xl text-ash">
-                  Fotos dos alunos em aula, mentorias e bastidores. Tudo acontece dentro da barbearia.
-                </p>
-              </div>
-              <div className="glass rounded-full px-6 py-3 text-xs uppercase tracking-[0.3em] text-ash">
-                Resultados visíveis
-              </div>
+      <section className="section extras" id="extras">
+        <div className="wrap section-head center">
+          <h2>Uma escola sempre atualizada com treinamentos extras para acelerar áreas indispensáveis.</h2>
+        </div>
+
+        <div className="wrap extras-grid">
+          {extraTrainings.map((item) => (
+            <article className="extra-card" key={item.title}>
+              <Image
+                src={item.image}
+                alt={item.title}
+                width={520}
+                height={720}
+                sizes="(max-width: 720px) 100vw, (max-width: 1080px) 33vw, 33vw"
+                quality={82}
+                className="extra-image"
+                style={{ objectPosition: item.imagePosition }}
+              />
+              <h3>{item.title}</h3>
+            </article>
+          ))}
+        </div>
+
+        <div className="wrap center-cta">
+          <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
+            Quero fazer parte da Barber Gestão Pro
+          </a>
+        </div>
+      </section>
+
+      <section className="section journey" id="modulos">
+        <div className="wrap section-head center">
+          <p className="tag">Trilha completa do curso</p>
+          <h2 className="journey-title">
+            <span>19 aulas completas:</span>
+            <span>do começo à expansão</span>
+            <span>da sua barbearia</span>
+          </h2>
+          <p className="journey-copy">
+            Se você está começando agora ou já tem barbearia e pensa em abrir um segundo espaço, o Barber Gestão Pro
+            entrega um caminho direto, com começo, meio e expansão para acelerar sua evolução sem tentativa e erro.
+          </p>
+        </div>
+        <div className="wrap journey-grid">
+          <JourneyModules modules={courseModules} />
+        </div>
+      </section>
+
+      <section className="section advantages" id="vantagens">
+        <div className="wrap section-head center">
+          <h2>Vantagens oferecidas pela nossa plataforma</h2>
+        </div>
+        <div className="wrap advantages-grid">
+          {advantages.map((item) => (
+            <article className="adv-card" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="wrap center-cta">
+          <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
+            Comprar agora Barber Gestão Pro
+          </a>
+        </div>
+      </section>
+
+      <section className="marquee" aria-label="Barber Gestão Pro repetição 2">
+        <div className="marquee-track reverse">
+          {marqueeText.map((item, index) => (
+            <span key={`rm1-${index}`}>
+              {item} <b>•</b>
+            </span>
+          ))}
+          {marqueeText.map((item, index) => (
+            <span key={`rm2-${index}`}>
+              {item} <b>•</b>
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="section about" id="sobre">
+        <div className="wrap about-grid">
+          <div>
+            <p className="tag">Sobre o Carlos Copetti</p>
+            <h2>Carlos Copetti e a Copetti&apos;s Barbershop</h2>
+            <p className="bio">
+              Em 7 anos de experiência, Carlos Copetti impactou milhares de clientes e construiu uma barbearia sólida,
+              com mais de 3.000 clientes fidelizados.
+            </p>
+            <p className="bio">
+              Fundador, barbeiro e proprietário da Copetti&apos;s Barbershop, com duas unidades ativas em Foz do Iguaçu,
+              ele consolidou uma experiência masculina completa: técnica, ambiente e atendimento. Esse repertório
+              sustenta o curso Barber Gestão Pro.
+            </p>
+            <p className="bio">
+              Hoje, Copetti compartilha estratégias práticas sobre gestão, leis, precificação, equipe e financeiro, os
+              mesmos pilares que sustentam suas unidades com crescimento consistente.
+            </p>
+
+            <div className="units">
+              <article>
+                <h3>Unidade 01</h3>
+                <p>Vila Yolanda</p>
+                <p>Av. Felipe Wandscheer, 805</p>
+              </article>
+              <article>
+                <h3>Unidade 02</h3>
+                <p>Jardim Naipi</p>
+                <p>Foz do Iguaçu • PR</p>
+              </article>
             </div>
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-stretch">
-              <div className="relative lg:-translate-y-6">
-                <div className="golden-border rounded-3xl">
-                  <div className="relative overflow-hidden rounded-[23px]">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <Image
-                      src="/ensinando.jpeg"
-                      alt="Mentor ensinando alunos"
-                      width={960}
-                      height={720}
-                      className="h-[420px] w-full object-cover object-[50%_18%]"
-                    />
-                    <div className="absolute bottom-6 left-6 rounded-full border border-brass/40 px-4 py-2 text-[10px] uppercase tracking-[0.4em] text-ash">
-                      Aulas ao vivo
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-4">
+
+            <p className="positioning">
+              Posicionamento: <strong>&quot;Mais que uma barbearia, um lugar de transformação.&quot;</strong>
+            </p>
+
+            <p className="handle">@copettisbarbershop • Mentor desde 2019</p>
+          </div>
+
+          <div className="about-photo-wrap">
+            <div className="about-photo-glow" aria-hidden="true" />
+            <Image
+              src="/negocio.png"
+              alt="Carlos Copetti mentor"
+              width={721}
+              height={1065}
+              sizes="(max-width: 1080px) 100vw, 42vw"
+              quality={84}
+              className="about-photo"
+            />
+          </div>
+        </div>
+
+        <div className="wrap roots">
+          <p className="tag">Raízes</p>
+          <h2>História real, sem romantizar.</h2>
+          <p className="roots-copy">
+            Do começo simples às primeiras oportunidades, visibilidade local, experiência prática e construção de
+            autoridade.
+          </p>
+
+          <div className="roots-grid">
+            {rootsGallery.map((item) => (
+              <article className="root-card" key={item.title}>
                 <Image
-                  src="/alunos.jpeg"
-                  alt="Alunos em aula"
-                  width={620}
-                  height={460}
-                  className="h-56 w-full rounded-3xl border border-white/10 object-cover object-[50%_18%]"
+                  src={item.image}
+                  alt={item.title}
+                  width={540}
+                  height={420}
+                  sizes="(max-width: 720px) 100vw, (max-width: 1080px) 50vw, 33vw"
+                  quality={82}
+                  className="root-image"
+                  style={{ objectPosition: item.imagePosition }}
                 />
-                <div className="grid grid-cols-2 gap-4">
-                  <Image
-                    src="/alunos2.jpeg"
-                    alt="Treinamento ao vivo"
-                    width={420}
-                    height={340}
-                    className="h-44 w-full rounded-3xl border border-white/10 object-cover object-[50%_18%]"
-                  />
-                  <Image
-                    src="/alunos3.jpeg"
-                    alt="Alunos em aula"
-                    width={420}
-                    height={340}
-                    className="h-44 w-full rounded-3xl border border-white/10 object-cover object-[50%_18%]"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </MotionSection>
-
-        <MotionSection className="mx-auto max-w-6xl px-6 py-20 section-lazy" id="oferta">
-          <div className="glass relative overflow-hidden rounded-[32px] p-10">
-            <div className="absolute right-[-60px] top-[-60px] h-40 w-40 rounded-full bg-brass/30 blur-3xl" />
-            <div className="absolute left-[-40px] bottom-[-40px] h-48 w-48 rounded-full bg-brass/14 blur-3xl" />
-            <div className="relative z-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-              <div>
-                <Tag>Oferta especial</Tag>
-                <h2 className="mt-4 font-display text-5xl text-bone">Acesso completo por R$ 67,00</h2>
-                <p className="mt-4 text-ash">
-                  Entre hoje e começa a aplicar o método Barber Gestão Pro na sua barbearia.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <a
-                    href={ofertaLink}
-                    className="shine rounded-full bg-brass px-8 py-4 text-sm font-semibold uppercase tracking-[0.35em] text-ink shadow-glow"
-                  >
-                    Quero meu acesso
-                  </a>
-                </div>
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-black/50 p-6">
-                <p className="text-xs uppercase tracking-[0.3em] text-ash">Inclui</p>
-                <ul className="mt-4 space-y-3 text-ash">
-                  <li>Checklist de atendimento e experiência masculina</li>
-                  <li>Direcionamento de marketing local e digital</li>
-                  <li>Plano de escala com equipe e padrão de serviço</li>
-                </ul>
-                <div className="mt-6 rounded-2xl border border-brass/30 bg-brass/10 p-4 text-sm text-bone">
-                  Copetti&apos;s Barbershop como referência real, não teoria.
-                </div>
-              </div>
-            </div>
-          </div>
-        </MotionSection>
-
-        <MotionSection className="mx-auto max-w-6xl px-6 pb-20 section-lazy" id="faq">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {faqItems.map((item) => (
-              <div key={item.q} className="glass rounded-2xl p-6">
-                <p className="text-lg text-bone">{item.q}</p>
-                <p className="mt-3 text-ash">{item.a}</p>
-              </div>
+                <h3>{item.title}</h3>
+                <p>{item.subtitle}</p>
+              </article>
             ))}
           </div>
-        </MotionSection>
+        </div>
+      </section>
 
-        <footer className="border-t border-white/10 px-6 py-10 text-center text-xs uppercase tracking-[0.3em] text-ash">
-          Barber Gestão Pro • Copetti&apos;s Barbershop • Foz do Iguaçu
-        </footer>
-      </div>
-    </LazyMotion>
+      <section className="section offer" id="oferta">
+        <div className="wrap offer-grid">
+          <div className="offer-left">
+            <p className="tag">Condicionais especiais para se inscrever hoje</p>
+            <ul>
+              <li>Aulas atualizadas</li>
+              <li>Cursos exclusivos</li>
+              <li>Apoio e suporte</li>
+            </ul>
+            <p className="limited">Condição especial por tempo limitado</p>
+          </div>
+
+          <article className="price-card">
+            <span className="price-kicker">Por apenas</span>
+            <h2 className="price-value">
+              <small>R$</small>
+              67
+              <em>,00</em>
+            </h2>
+            <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
+              Comprar agora
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section className="section audience" id="para-quem">
+        <div className="wrap audience-grid">
+          <div className="aud-photo">
+            <Image
+              src="/fotomentornova.jpeg"
+              alt="Carlos Copetti em mentoria"
+              width={1080}
+              height={1350}
+              sizes="(max-width: 1080px) 100vw, 48vw"
+              quality={84}
+            />
+          </div>
+
+          <div className="aud-content">
+            <div className="aud-head">
+              <h2>
+                O curso Barber Gestão Pro revoluciona sua barbearia ao solucionar desafios reais de operação,
+                liderança e crescimento.
+              </h2>
+            </div>
+
+            <div className="aud-points">
+              <ul className="aud-list">
+                {audience.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="guarantee-card">
+              <p>
+                Garantia de 7 dias: acesse o treinamento e teste com calma. Se não fizer sentido para você, devolvemos
+                100% do valor.
+              </p>
+              <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
+                Comprar agora Barber Gestão Pro
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section faq" id="faq">
+        <div className="wrap faq-wrap">
+          <h2>Perguntas Frequentes</h2>
+          <div className="faq-list">
+            {faqItems.map((item) => (
+              <details key={item.q} className="faq-item">
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+          <p className="faq-help">Alguma outra dúvida?</p>
+          <a href={whatsappLink} target="_blank" rel="noreferrer" className="btn btn-whatsapp">
+            Fale conosco no WhatsApp
+          </a>
+          <p className="support-number">Suporte direto: {whatsappDisplay}</p>
+        </div>
+      </section>
+
+      <footer className="footer">
+        <p>Copyright 2026 – Barber Gestão Pro ® Todos os direitos reservados.</p>
+      </footer>
+
+      <a
+        className="floating-wa"
+        href={whatsappLink}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Falar com suporte no WhatsApp"
+      >
+        <svg
+          className="floating-wa-icon"
+          viewBox="0 0 24 24"
+          role="img"
+          aria-label="WhatsApp"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="currentColor"
+            d="M16.75 13.96c-.25-.13-1.47-.72-1.7-.8-.23-.09-.4-.13-.57.12-.17.25-.65.8-.8.96-.15.17-.3.19-.55.07-.25-.13-1.06-.39-2.02-1.26-.74-.66-1.25-1.48-1.4-1.73-.15-.25-.02-.38.11-.51.11-.11.25-.3.38-.45.12-.15.16-.25.25-.42.08-.17.04-.32-.02-.45-.07-.13-.57-1.37-.78-1.88-.2-.49-.41-.42-.57-.42h-.48c-.17 0-.45.06-.69.32-.23.25-.9.88-.9 2.15s.93 2.5 1.06 2.67c.13.17 1.82 2.78 4.41 3.9.62.27 1.11.43 1.49.55.63.2 1.2.17 1.65.1.5-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.3Z"
+          />
+          <path
+            fill="currentColor"
+            d="M20.52 3.45A11.88 11.88 0 0 0 12.07 0C5.5 0 .16 5.34.16 11.91c0 2.1.55 4.14 1.6 5.94L.05 24l6.31-1.65a11.82 11.82 0 0 0 5.71 1.45h.01c6.57 0 11.92-5.34 11.92-11.91 0-3.18-1.24-6.17-3.48-8.44Zm-8.45 18.34h-.01a9.86 9.86 0 0 1-5.03-1.38l-.36-.22-3.75.98 1-3.65-.24-.37a9.84 9.84 0 0 1-1.5-5.24c0-5.44 4.43-9.87 9.89-9.87 2.64 0 5.12 1.03 6.98 2.89a9.8 9.8 0 0 1 2.89 6.99c0 5.45-4.44 9.87-9.87 9.87Z"
+          />
+        </svg>
+        <span>Falar com suporte</span>
+      </a>
+    </main>
   );
 }
