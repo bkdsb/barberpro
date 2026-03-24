@@ -1064,22 +1064,34 @@ a {
   border-radius: 0.78rem;
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(19, 20, 22, 0.92), rgba(9, 10, 11, 0.94));
-  padding: 1rem;
+  padding: clamp(1.15rem, 1.8vw, 1.6rem) clamp(1.15rem, 2vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.offer-left .tag {
+  line-height: 1.35;
+  letter-spacing: 0.22em;
+  max-width: 42ch;
 }
 
 .offer-left ul {
-  margin: 0.85rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.45rem;
+  gap: 0.62rem;
+  max-width: 34ch;
 }
 
 .offer-left li {
   color: var(--bone-200);
-  padding-left: 1rem;
+  padding-left: 1.05rem;
   position: relative;
-  line-height: 1.4;
+  line-height: 1.34;
+  font-size: clamp(0.88rem, 1.5vw, 1.02rem);
+  font-weight: 600;
 }
 
 .offer-left li::before {
@@ -1091,11 +1103,12 @@ a {
 }
 
 .limited {
-  margin-top: 0.8rem;
+  margin-top: 1.15rem;
   color: var(--green-400);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
 }
 
 .price-card {

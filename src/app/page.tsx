@@ -168,7 +168,7 @@ export default function Home() {
               <span className="hero-line">A construção de um negocio</span>
               <span className="hero-line">lucrativo e autêntico começa</span>
               <span className="hero-line">
-                aqui na <span className="hero-highlight">Barber Gestão Pro</span>
+                aqui no <span className="hero-highlight">Barber Gestão Pro</span>
               </span>
             </h1>
             <p>
@@ -200,7 +200,7 @@ export default function Home() {
         <div className="wrap section-head center problems-head">
           <p className="tag">Soluções Personalizadas</p>
           <h2 className="problems-title">
-            Na Barber Gestão Pro você aprende <span className="problems-accent">estratégias poderosas</span> para
+            No Barber Gestão Pro você aprende <span className="problems-accent">estratégias poderosas</span> para
             resolver os principais desafios de um negócio.
           </h2>
         </div>
@@ -250,7 +250,7 @@ export default function Home() {
             sizes="(max-width: 720px) 60vw, 384px"
             className="laptop"
           />
-          <h2>Os treinamentos base da Barber Gestão Pro garantem ferramentas para impulsionar sua operação.</h2>
+          <h2>Os treinamentos base do Barber Gestão Pro garantem ferramentas para impulsionar sua operação.</h2>
         </div>
 
         <div className="wrap base-grid">
@@ -298,7 +298,7 @@ export default function Home() {
 
         <div className="wrap center-cta">
           <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
-            Quero fazer parte da Barber Gestão Pro
+            Quero fazer parte do Barber Gestão Pro
           </a>
         </div>
       </section>
@@ -444,7 +444,7 @@ export default function Home() {
             <p className="tag">Condicionais especiais para se inscrever hoje</p>
             <ul>
               <li>Aulas atualizadas</li>
-              <li>Cursos exclusivos</li>
+              <li>Curso exclusivo</li>
               <li>Apoio e suporte</li>
             </ul>
             <p className="limited">Condição especial por tempo limitado</p>
@@ -495,8 +495,9 @@ export default function Home() {
 
             <div className="guarantee-card">
               <p>
-                Garantia de 7 dias: acesse o treinamento e teste com calma. Se não fizer sentido para você, devolvemos
-                100% do valor.
+                Garantia de 7 dias: acesse o treinamento e teste com calma.
+                <br />
+                Se não fizer sentido para você, devolvemos 100% do valor.
               </p>
               <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
                 Comprar agora Barber Gestão Pro
