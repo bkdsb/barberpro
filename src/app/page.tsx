@@ -211,7 +211,7 @@ export default function Home() {
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <h1 className="hero-title">
-              <span className="hero-line">A construção de um negocio</span>
+              <span className="hero-line">A construção de um negócio</span>
               <span className="hero-line">lucrativo e autêntico começa</span>
               <span className="hero-line">
                 aqui no <span className="hero-highlight">Barber Gestão Pro</span>
