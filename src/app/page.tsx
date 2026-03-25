@@ -37,19 +37,20 @@ const baseTrainings = [
   {
     title: 'Financeiro',
     text: 'Métodos para estruturar as finanças, fortalecer a saúde do negócio e maximizar resultados.',
-    image: '/negocio.png',
-    imagePosition: '50% 23%',
-  },
-  {
-    title: 'Pessoas',
-    text: 'Desenvolvimento de equipe com cultura, comunicação eficiente, liderança e treinamento.',
     image: '/fotocomtime.jpg',
     imagePosition: '50% 44%',
+    mobileImageClass: 'base-image-financeiro-mobile',
   },
   {
     title: 'Processos',
     text: 'Organize tarefas, padronize execução e mantenha a operação eficiente todos os dias.',
     image: '/ensinando.jpeg',
+    imagePosition: '50% 23%',
+  },
+  {
+    title: 'Pessoas',
+    text: 'Desenvolvimento de equipe com cultura, comunicação eficiente, liderança e treinamento.',
+    image: '/equipe.jpg',
     imagePosition: '50% 23%',
   },
   {
@@ -62,7 +63,7 @@ const baseTrainings = [
 
 const extraTrainings = [
   { title: 'Mentor experiente', image: '/alunos3.jpeg', imagePosition: '50% 50%' },
-  { title: 'Método validado', image: '/alunos2.jpeg', imagePosition: '50% 30%' },
+  { title: 'Método validado', image: '/alunos2.jpeg', imagePosition: '50% 45%' },
   { title: 'Alunos comprovam', image: '/alunos.jpeg', imagePosition: '50% 21%' },
 ];
 
@@ -125,7 +126,7 @@ const rootsGallery = [
     title: 'Na rádio local',
     subtitle: 'Comunicação e posicionamento',
     image: '/mentorradio.jpeg',
-    imagePosition: '50% 32%',
+    imagePosition: '50% 23%',
   },
 ];
 
@@ -308,7 +309,7 @@ export default function Home() {
                 height={420}
                 sizes="(max-width: 720px) 100vw, (max-width: 1080px) 50vw, 25vw"
                 quality={82}
-                className="base-image"
+                className={`base-image ${item.mobileImageClass ?? ''}`.trim()}
                 style={{ objectPosition: item.imagePosition }}
               />
               <h3>{item.title}</h3>
