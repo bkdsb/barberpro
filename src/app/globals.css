@@ -947,6 +947,10 @@ a {
   color: var(--green-400);
 }
 
+.positioning-mobile-break {
+  display: none;
+}
+
 .handle {
   margin-top: 0.64rem;
   color: var(--bone-300);
@@ -1672,6 +1676,11 @@ a {
   .hero {
     min-height: auto;
     padding-top: 0.8rem;
+  }
+
+  .positioning-mobile-break {
+    display: block;
+    height: 0;
   }
 
   .hero-grid {

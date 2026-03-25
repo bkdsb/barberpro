@@ -435,7 +435,12 @@ export default function Home() {
             </div>
 
             <p className="positioning">
-              Posicionamento: <strong>&quot;Mais que uma barbearia, um lugar de transformação.&quot;</strong>
+              Posicionamento:{' '}
+              <strong>
+                &quot;Mais que uma barbearia,
+                <span className="positioning-mobile-break" aria-hidden="true" />
+                {' '}um lugar de transformação.&quot;
+              </strong>
             </p>
 
             <p className="handle">@copettisbarbershop • Mentor desde 2019</p>
