@@ -519,8 +519,8 @@ export default function Home() {
         <div className="wrap audience-grid">
           <div className="aud-photo">
             <Image
-              src="/cadeiradelado2-v2.png"
-              alt="Carlos Copetti em mentoria"
+              src="/posi.png"
+              alt="Imagem do Barber Gestão Pro"
               width={1080}
               height={1350}
               sizes="(max-width: 1080px) 100vw, 48vw"
