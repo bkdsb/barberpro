@@ -38,8 +38,12 @@ export function JourneyModules({ modules }: JourneyModulesProps) {
     };
 
     sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', sync);
+      return () => media.removeEventListener('change', sync);
+    }
+    media.addListener(sync);
+    return () => media.removeListener(sync);
   }, [modules.length]);
 
   useEffect(() => {
