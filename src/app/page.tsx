@@ -144,7 +144,7 @@ const faqItems = [
   },
   {
     q: '2 - Valor e pagamento',
-    a: 'Acesso por R$67,00 em pagamento único, com aulas, bônus e suporte.',
+    a: 'Acesso por R$147,00 em pagamento único, com aulas, bônus e suporte.',
   },
   {
     q: '3 - Garantia',
@@ -178,7 +178,7 @@ const courseJsonLd = {
   offers: {
     '@type': 'Offer',
     url: checkoutLink,
-    price: '67.00',
+    price: '147.00',
     priceCurrency: 'BRL',
     availability: 'https://schema.org/InStock',
     category: 'Course',
@@ -505,7 +505,7 @@ export default function Home() {
             <span className="price-kicker">Por apenas</span>
             <h2 className="price-value">
               <small>R$</small>
-              67
+              147
               <em>,00</em>
             </h2>
             <a href={checkoutLink} target="_blank" rel="noreferrer" className="btn btn-primary">
